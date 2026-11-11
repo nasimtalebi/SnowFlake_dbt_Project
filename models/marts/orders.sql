@@ -1,10 +1,25 @@
+
+{{
+    config(
+        materialized='incremental',
+        unique_key='order_id',
+        incremental_strategy='merge'
+    )
+}}
+
 with
 
 orders as (
 
     select * from {{ ref('stg_orders') }}
 
+    {% if is_incremental() %}
+    -- این شرط باعث می‌شود در حالت اینکریمنتال، فقط سفارشات جدیدتر خوانده شوند
+    where order_date >= (select max(order_date) from {{ this }})
+    {% endif %}
+
 ),
+
 
 order_items as (
 
