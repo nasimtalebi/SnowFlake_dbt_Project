@@ -1,0 +1,11 @@
+models:
+  - name: customer_segments_python
+    description: "Customer segmentation results generated via Python model"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: segment_name
+        tests:
+          - not_null
