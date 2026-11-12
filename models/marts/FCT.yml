@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: fct_customer_orders
+    description: "Table containing customer-level order summaries and lifetime spend."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for the customer."
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+
+      - name: total_orders
+        description: "Total number of orders placed by the customer."
+        tests:
+          - not_null
+          - expression_is_true:
+              expression: "total_orders >= 0"
+
+  - name: fct_product_performance
+    description: "Product-level performance and revenue metrics."
+    columns:
+      - name: product_id
+        description: "Unique identifier for the product."
+        tests:
+          - unique
+          - not_null

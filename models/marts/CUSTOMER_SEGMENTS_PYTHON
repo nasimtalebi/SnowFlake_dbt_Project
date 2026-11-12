@@ -1,0 +1,23 @@
+import pandas as pd
+
+def model(dbt, session):
+    dbt.config(
+        materialized="table"
+    )
+    
+    df = dbt.ref("customers").to_pandas()
+    
+    df.columns = [col.upper() for col in df.columns]
+    
+    def segment_customer(row):
+        orders_count = row.get('NUMBER_OF_ORDERS', row.get('COUNT_LIFETIME_ORDERS', 0))
+        if orders_count >= 5:
+            return 'VIP'
+        elif orders_count >= 2:
+            return 'Regular'
+        else:
+            return 'New / Low-Value'
+            
+    df['CUSTOMER_SEGMENT'] = df.apply(segment_customer, axis=1)
+    
+    return df
