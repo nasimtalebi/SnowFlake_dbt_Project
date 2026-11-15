@@ -17,7 +17,7 @@ models:
         description: "Total number of orders placed by the customer."
         tests:
           - not_null
-          - expression_is_true:
+          - dbt_utils.expression_is_true:
               expression: "total_orders >= 0"
 
   - name: fct_product_performance
